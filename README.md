@@ -1,127 +1,32 @@
-# Web3 任务执行系统
+# FractionAI 自动化脚本
 
-该系统能够执行多种Web3任务，包括FractionAI平台的任务和其他链上操作。
+这是一个用于自动管理FractionAI平台智能代理的多账户自动化脚本。脚本支持多账户并行处理、自动化验证码识别、代理IP轮换以及自动执行一系列任务，如代理创建和自动匹配设置等。
 
-## 主要功能
+## 功能特点
 
-- 多账号并行执行任务
-- 支持各种验证码服务 (2captcha, anticaptcha, capmonster)
-- 支持动态代理配置
-- 可配置的任务排队和调度
-- 详细的日志记录
-- 错误处理和自动重试
+- **多账户支持**：可同时处理多个以太坊账户
+- **多线程处理**：使用Node.js工作线程并行执行任务
+- **验证码自动识别**：集成2captcha等验证码解决服务
+- **代理IP支持**：支持使用HTTP代理进行请求
+- **JA3指纹模拟**：通过cycletls实现浏览器指纹伪装
+- **自动重试机制**：请求失败时自动重试，支持指数退避策略
+- **完整任务链**：按顺序执行验证、获取代理、创建代理、管理自动匹配等任务
+- **详细日志记录**：记录所有操作和错误信息，支持日志轮转
 
-## 快速开始
+## 安装指南
 
-### 1. 安装依赖
+### 系统要求
 
-```bash
-npm install
-```
+- Node.js 14.0+
+- npm 或 yarn
 
-### 2. 配置
+### 安装步骤
 
-复制`.env.example`文件为`.env`，并根据需要修改配置：
-
-```bash
-cp .env.example .env
-```
-
-### 3. 配置私钥
-
-创建一个`private_keys.txt`文件，每行放置一个私钥：
-
-```
-# 这是私钥文件，每行一个私钥（可以添加注释，以#开头）
-0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
-3456789012abcdef3456789012abcdef3456789012abcdef3456789012abcdef
-```
-
-### 4. 配置动态代理
-
-在`.env`文件中配置代理服务器：
-
-```
-USE_PROXY=true
-USE_DYNAMIC_PROXY=true
-PROXY_HOST=your-proxy-host.com
-PROXY_PORT=1080
-PROXY_USERNAME=username
-PROXY_PASSWORD=password
-```
-
-### 5. 运行
+1. 克隆仓库到本地
 
 ```bash
-node src/main.js
-```
-
-## 配置参数
-
-### 私钥配置
-
-- `PRIVATE_KEY_FILE`: 私钥文件路径，一行一个私钥
-
-### 代理配置
-
-- `USE_PROXY`: 是否使用代理 (true/false)
-- `USE_DYNAMIC_PROXY`: 是否使用动态代理 (true/false)
-- `PROXY_HOST`: 代理服务器主机名
-- `PROXY_PORT`: 代理服务器端口
-- `PROXY_USERNAME`: 代理服务器用户名 (可选)
-- `PROXY_PASSWORD`: 代理服务器密码 (可选)
-
-### 任务配置
-
-- `TASK_SEQUENCE`: 任务执行顺序，逗号分隔
-- `MAX_GAMES`: 最大游戏次数
-- `ENTRY_FEE`: 创建对战的费用
-
-### API配置
-
-- `API_BASE_URL`: 通用API基础URL
-- `FRACTION_API_URL`: FractionAI服务API地址
-
-### 验证码配置
-
-- `CAPTCHA_SERVICE`: 验证码服务提供商 (2captcha, anticaptcha, capmonster)
-- `CAPTCHA_API_KEY`: 验证码服务API密钥
-- `HCAPTCHA_SITE_KEY`: hCaptcha站点密钥
-- `RECAPTCHA_SITE_KEY`: reCAPTCHA站点密钥
-
-## 项目结构
-
-```
-.
-├── src                 # 源代码目录
-│   ├── config          # 配置文件
-│   │   └── index.js
-│   ├── core            # 核心功能模块
-│   │   ├── EthSigner.js     # 以太坊签名工具
-│   │   ├── KeyManager.js    # 私钥管理器
-│   │   └── ProxyManager.js  # 代理管理器
-│   ├── services        # 服务模块
-│   │   └── FractionAIHandler.js  # FractionAI平台处理器
-│   ├── tasks           # 任务执行相关
-│   │   └── worker.js   # 工作线程模块
-│   ├── utils           # 工具类
-│   │   ├── HttpClient.js    # HTTP客户端
-│   │   └── Logger.js        # 日志管理器
-│   └── main.js         # 程序入口
-├── accounts.json       # 账号配置文件
-├── proxies.txt         # 代理配置文件
-├── .env.example        # 环境变量示例
-├── package.json
-└── README.md
-```
-
-## 安装
-
-1. 克隆仓库
-
-```bash
-git clone https://github.com/yourusername/eth-multi-account-task-runner.git
-cd eth-multi-account-task-runner
+git clone [仓库URL]
+cd fractionaiBot
 ```
 
 2. 安装依赖
@@ -130,100 +35,134 @@ cd eth-multi-account-task-runner
 npm install
 ```
 
-3. 配置环境变量
+3. 创建配置文件
 
 ```bash
 cp .env.example .env
 ```
 
-然后编辑`.env`文件，填写必要的配置信息。
+4. 编辑`.env`文件，设置必要的参数（详见配置说明）
 
-4. 准备账号文件
+5. 准备私钥文件，每行一个私钥
 
-创建`accounts.json`文件，格式如下：
-
-```json
-[
-  {
-    "privateKey": "0x...",
-    "encrypted": false
-  },
-  {
-    "privateKey": "0x...",
-    "encrypted": false
-  }
-]
+```bash
+echo "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef" > private_keys.txt
 ```
 
-5. (可选) 准备代理文件
+## 配置说明
 
-如果需要使用代理，创建`proxies.txt`文件，每行一个代理，格式为`ip:port`或`ip:port:username:password`。
+### 关键配置项
+
+- **API配置**
+  - `API_BASE_URL`: FractionAI API基础URL
+  - `FRACTION_API_URL`: FractionAI主API地址
+  - `FRACTION_API3_URL`: FractionAI API3地址
+
+- **代理配置**
+  - `USE_PROXY`: 是否启用代理
+  - `PROXY_HOST`: 代理服务器地址
+  - `PROXY_PORT`: 代理服务器端口
+  - `PROXY_USERNAME`: 代理认证用户名
+  - `PROXY_PASSWORD`: 代理认证密码
+
+- **验证码配置**
+  - `CAPTCHA_SERVICE`: 验证码服务提供商 (2captcha, anticaptcha, capmonster)
+  - `CAPTCHA_API_KEY`: 验证码服务API密钥
+
+- **任务配置**
+  - `TASK_SEQUENCE`: 任务执行顺序，默认使用任务链
+  - `TASK_MAX_RETRIES`: 任务最大重试次数
+  - `STOP_ON_FAILURE`: 是否在任务失败时停止执行
+
+- **FractionAI特定配置**
+  - `MAX_GAMES`: 自动匹配最大游戏数量
+  - `ENTRY_FEE`: 创建对战的费用
+  - `MATCH_MODE`: 对战模式 (auto或manual)
+
+### 私钥文件格式
+
+`private_keys.txt`文件应包含以太坊私钥列表，每行一个私钥。支持以下格式：
+
+```
+0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+3456789012abcdef3456789012abcdef3456789012abcdef3456789012abcdef
+# 这是注释行，以#开头
+```
 
 ## 使用方法
 
-### 基本运行
+### 基本使用
+
+启动脚本：
 
 ```bash
 npm start
 ```
 
-### 开发模式（自动重启）
+开发模式（自动重启）：
 
 ```bash
 npm run dev
 ```
 
-### 清理日志
+### 高级用法
 
-```bash
-npm run clean
-```
+1. **自定义任务执行**
 
-## 配置选项
+   可以在`.env`文件中修改`TASK_SEQUENCE`变量来自定义任务执行顺序。默认使用完整任务链：
 
-主要配置位于`src/config/index.js`文件中，也可以通过环境变量进行设置。
+   ```
+   TASK_SEQUENCE=fractionAI:executeTaskChain
+   ```
 
-### 核心配置
+   该任务链按顺序执行以下任务：
+   - verify (验证用户身份)
+   - getUserAgents (获取用户智能代理列表)
+   - createAgent (如果没有代理则创建一个)
+   - disableAutomatedMatchmaking (禁用自动匹配)
+   - enableAutomatedMatchmaking (启用自动匹配)
 
-- `ACCOUNTS_FILE` - 账号文件路径
-- `USE_PROXY` - 是否使用代理 (true/false)
-- `PROXY_FILE` - 代理文件路径
-- `THREAD_COUNT` - 线程数量
-- `ENCRYPTION_KEY` - 私钥加密密钥
-- `API_BASE_URL` - API基础URL
+2. **并发控制**
 
-### 日志配置
+   调整`.env`文件中的`MAX_WORKERS`和`MAX_TASKS_PER_WORKER`来控制并发数量。
 
-- `LOG_LEVEL` - 日志级别 (debug/info/warn/error)
+3. **日志管理**
 
-### FractionAI配置
+   日志文件存储在`logs`目录中，可通过`.env`文件中的`LOG_LEVEL`设置日志详细程度。
 
-- `FRACTION_API_URL` - FractionAI API地址
-- `MATCH_MODE` - 对战模式 (auto/manual)
-- `MAX_GAMES` - 最大游戏局数
-- `ENTRY_FEE` - 入场费（ETH）
+   清理日志：
+   ```bash
+   npm run clean
+   ```
 
-## 安全提示
+## 故障排除
 
-- 请勿在公共存储库中保存您的私钥
-- 推荐使用环境变量或加密存储方式管理私钥
-- 定期更换代理IP以避免IP封禁
-- 使用不同的JA3指纹以减少被识别风险
+### 常见问题
 
-## 扩展任务
+1. **验证码识别失败**
+   - 检查`CAPTCHA_API_KEY`是否正确
+   - 确认验证码服务账户余额是否充足
 
-要添加新的任务类型，请修改`config.js`中的`tasks`数组，并在`Worker`类中添加相应的任务处理方法。
+2. **代理连接问题**
+   - 验证代理服务器地址和端口是否正确
+   - 检查代理认证信息是否正确
+   - 尝试临时禁用代理：将`USE_PROXY`设为`false`
 
-## 贡献指南
+3. **区块链交易失败**
+   - 确保私钥账户中有足够的ETH余额
+   - 检查gasLimit和maxFeePerGas配置
 
-欢迎贡献代码。请遵循以下步骤：
+4. **请求频率限制**
+   - 调整`REQUEST_RATE_LIMIT`以减少请求频率
+   - 增加`DELAY_BETWEEN_TASKS`的值
 
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 打开Pull Request
+## 注意事项
+
+1. 请勿在公共环境中保存未加密的私钥文件
+2. 不建议设置过高的并发数，以避免触发API限制
+3. 定期备份操作日志和结果
+4. 以太坊交易会消耗燃料费，请确保账户余额充足
 
 ## 许可证
 
-本项目采用MIT许可证。详见[LICENSE](LICENSE)文件。 
+MIT License 
