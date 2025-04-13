@@ -1,0 +1,45 @@
+{
+  "name": "fractionaiBot",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "audit": "npm audit --production",
+    "update": "npm update",
+    "clean": "rimraf logs/*.log"
+  },
+  "keywords": [
+    "ethereum",
+    "multi-account",
+    "multi-thread",
+    "automation",
+    "proxy",
+    "ja3"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@2captcha/captcha-solver": "^1.3.0",
+    "axios": "^1.8.4",
+    "cycletls": "^1.0.27",
+    "delay": "^5.0.0",
+    "dotenv": "^16.4.1",
+    "ethers": "^5.7.2",
+    "form-data": "^4.0.2",
+    "got-tls": "^1.0.6",
+    "http2-antifingerprint": "^1.17.1",
+    "node-fetch": "^2.7.0",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "rimraf": "^5.0.5"
+  }
+}

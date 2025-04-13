@@ -1,0 +1,4 @@
+/node_modules/
+.env
+/private_keys.txt
+/.idea/
